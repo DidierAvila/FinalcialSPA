@@ -109,7 +109,7 @@ namespace FinancialSPA.Controllers
                             #endregion Autenticar Dw
                         }
                         break;
-                    case 200:
+                    case 260:
                         {
                             #region Autenticar admin
 
