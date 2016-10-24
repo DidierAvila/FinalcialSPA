@@ -1,13 +1,33 @@
 ﻿<!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home Page - My ASP.NET Application</title>
     <link href="/Content/site.css" rel="stylesheet" />
     <link href="Content/bootstrap.css" rel="stylesheet" />
-    <script src="/Scripts/modernizr-2.6.2.js"></script>
     <link href="Content/site.css" rel="stylesheet" />
+    <script src="Scripts/Core.js"></script>
+    <script src="Jquery/jquery-3.1.0.js"></script>
+    <script src="Jquery/jquery-migrate-1.4.1.min.js"></script>
+    <script src="/Scripts/bootstrap.js"></script>
+    <script src="/Scripts/respond.js"></script>
+    <script src="Scripts/MainAplication.js"></script>
+
+    <script src="DataTables-1.10.12/media/js/jquery.dataTables.js"></script>
+    <script src="DataTables-1.10.12/media/js/dataTables.bootstrap.js"></script>
+    <script src="DataTables-1.10.12/media/js/dataTables.jqueryui.js"></script>
+    <script src="DataTables-1.10.12/media/js/jquery.dataTables.js"></script>
+    <link href="DataTables-1.10.12/media/css/dataTables.bootstrap.css" rel="stylesheet" />
+    <link href="DataTables-1.10.12/media/css/dataTables.jqueryui.css" rel="stylesheet" />
+    <link href="DataTables-1.10.12/media/css/jquery.dataTables.css" rel="stylesheet" />
+    <link href="DataTables-1.10.12/media/css/dataTables.foundation.css" rel="stylesheet" />
+    <link href="DataTables-1.10.12/media/css/jquery.dataTables_themeroller.css" rel="stylesheet" />
+    <link href="DataTables-1.10.12/media/css/dataTables.uikit.css" rel="stylesheet" />
+    <link href="DataTables-1.10.12/media/css/dataTables.material.css" rel="stylesheet" />
+    <link href="DataTables-1.10.12/media/css/dataTables.semanticui.css" rel="stylesheet" />
+    <link href="DataTables-1.10.12/media/css/buttons.dataTables.min.css" rel="stylesheet" />
+
     <style type="text/css">
         .auto-style1 {
             width: 100%;
@@ -24,13 +44,13 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="/">Application name</a>
+                <a class="navbar-brand" href="/">Aplicación almacen</a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a href="/">Home</a></li>
-                    <li><a href="/Home/About">About</a></li>
-                    <li><a href="/Home/Contact">Contact</a></li>
+                    <li><a id="BtnEntrada">Entrada</a></li>
+                    <li><a id="BtnProveedores">Proveedores</a></li>
+                    <li><a id="BtnOrdenCompra">Orden de compra</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="/Account/Register" id="registerLink">Register</a></li>
@@ -41,53 +61,274 @@
         </div>
     </div>
     <div class="container body-content">
-        <div class="jumbotron">
+        <div id="DivInformativo" class="jumbotron">
             <h1>Almacenamiento</h1>
             <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
             <p><a href="http://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
         </div>
 
-        <div class="row">
+        <div id="PageBody" class="row">
             <div id="Container">
-                <h2>Registros de entrada de alamacen</h2>
-                <br />
-            <form>
-                <table class="auto-style1">
-                    <tr>
-                        <td><label>Número de entrada:</label></td>
-                        <td><input id="NrnEntrada" type="text" /></td>
-                        <td><label>Fecha de entrada:</label></td>
-                        <td><input id="Fecha" type="date" /></td>
-                        <td><label>Proveedor:</label></td>
-                        <td>
-                            <select name="Proveedor">
-                             <option value="1">Windows Vista</option>
-                             <option value="2">Windows 7</option>
-                             <option value="3">Windows XP</option>
-                             <option value="10">Fedora</option>
-                             <option value="11">Debian</option>
-                             <option value="12">Suse</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                    </tr>
-                </table>
-                <br />
-                <div>
-                    <input id="btnAgregarFact" type="submit" name="Agregar Factura" value="Agregar Factura" />
-                    <input id="btnQuitarFact" type="submit" name="Quitar Factura" value="Quitar Factura" />
+                <div id="DivOrdenCompra">
+                   <br />
+                   <h2>Orden de compra</h2>
+                   <br />
+                    <table style="width:80%; margin: 0 auto">
+                        <tr>
+                            <td><label>Número de orden:</label></td>
+                            <td><input id="NrnOrdenC" type="number" class="form-control" /></td>
+                            <td></td>
+                            <td><input id="BtnBuscarOrdenC" type="submit" name="Consultar" value="Consultar" class="btn btn-primary btn-lg" /></td>
+                        </tr>
+                    </table>
+                    <br />
+                    <table id="tblResultadosOrdenC" class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Fecha</th>
+                                <th>Proveedor</th>
+                                <th>Valor total</th>
+                                <th>Cantidad bienes</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                        <tfoot>
+                            <tr>
+                                <th>Id</th>
+                                <th>Fecha</th>
+                                <th>Proveedor</th>
+                                <th>Valor total</th>
+                                <th>Cantidad bienes</th>
+                                <th>Estado</th>
+                            </tr>
+                        </tfoot>
+                    </table>
                 </div>
-                <br />
-                <input id="btnGuardar" type="submit" name="Guardar" value="Guardar" />
-                <input id="btnCancelar" type="submit" name="Cancelar" value="Cancelar" />
-            </form>
+                <!--Fin DivOrdenCompra-->
+                <div id="DivProveedores">
+                    <br />
+                    <h2>Proveedores</h2>
+                    <br />
+                    <form>
+                        <table class="auto-style1">
+                            <tr>
+                                <td><label>Buscar:</label></td>
+                                <td><input id="BuscarProveedor" type="text" class="form-control" /></td>
+                                <td><input id="BtnBuscarProv" type="submit" name="Buscar" value="Buscar" class="btn btn-primary btn-lg" /></td>
+                            </tr>
+                        </table>
+                    </form>
+                    <br />
+                    <br />
+                    <table id="tblResultados" class="table table-hover">
+                        <thead>
+                            <tr id="tblResultadosColsHead">
+                                <th>Id</th>
+                                <th>Nombre</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tblResultadosBody">
+                        </tbody>
+                        <tfoot>
+                            <tr id="tblResultadosColsFoot">
+                                <th>Id</th>
+                                <th>Nombre</th>
+                                <th>Estado</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                    <div id="example_wrapper" class="dataTables_wrapper">
+                        <div class="dataTables_length" id="example_length">
+                            <label>
+                                Show
+                                <select name="example_length" aria-controls="example" class="">
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select> entries
+                            </label>
+                        </div>
+                        <div id="example_filter" class="dataTables_filter">
+                            <label>
+                                Search:<input type="search" class="" placeholder="" aria-controls="example">
+                            </label>
+                        </div>
+
+                        <table id="tblResultados" class="display nowrap dataTable dtr-inline" cellspacing="0" width="80%" role="grid" aria-describedby="example_info" style="width: 100%;">
+                            <thead>
+                                <tr role="row">
+                                    <th class="sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 136px;">Id</th>
+                                    <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 216px;">Nombre</th>
+                                    <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 102px;">Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tblResultadosBody">
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th rowspan="1" colspan="1">Id</th>
+                                    <th rowspan="1" colspan="1">Nombre</th>
+                                    <th rowspan="1" colspan="1">Estado</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                        <div class="dataTables_info" id="example_info" role="status" aria-live="polite">Showing 1 to 10 of 57 entries</div>
+                        <div class="dataTables_paginate paging_simple_numbers" id="example_paginate">
+                            <a class="paginate_button previous disabled" aria-controls="example" data-dt-idx="0" tabindex="0" id="example_previous">Previous</a><span><a class="paginate_button current" aria-controls="example" data-dt-idx="1" tabindex="0">1</a><a class="paginate_button " aria-controls="example" data-dt-idx="2" tabindex="0">2</a><a class="paginate_button " aria-controls="example" data-dt-idx="3" tabindex="0">3</a><a class="paginate_button " aria-controls="example" data-dt-idx="4" tabindex="0">4</a><a class="paginate_button " aria-controls="example" data-dt-idx="5" tabindex="0">5</a><a class="paginate_button " aria-controls="example" data-dt-idx="6" tabindex="0">6</a></span><a class="paginate_button next" aria-controls="example" data-dt-idx="7" tabindex="0" id="example_next">Next</a>
+                        </div>
+
+                    </div>
+
+
+
+
+
+
+
+
+
+
+                    </div>
+                <!--Fin DivProveedores-->
+                <div id="DivEntradaAlmacen">
+                    <br />
+                    <h2>Registros de entrada de alamacen</h2>
+                    <br />
+                    <form>
+                        <table class="auto-style1">
+                            <tr>
+                                <td><label>Número de entrada:</label></td>
+                                <td><input id="NrnEntrada" type="text" readonly="readonly" class="form-control" /></td>
+                                <td><label>Fecha de entrada:</label></td>
+                                <td><input id="Fecha" type="date" class="form-control" /></td>
+                            </tr>
+                            <tr>
+                                <td><label>Proveedor:</label></td>
+                                <td>
+                                    <select id="Proveedor" name="Proveedor" class="form-control">
+                                        <option></option>
+                                    </select>
+                                </td>
+                                <td><label>Orden de compra:</label></td>
+                                <td>
+                                    <select id="OrdenCompraXprov" name="OrdenCompraXprov" class="form-control">
+                                        <option></option>
+                                    </select>
+                                </td>
+                            </tr>                           
+                        </table>
+                        <input id="BtnBuscarFact" type="submit" name="Consultar" value="Consultar" class="btn btn-primary btn-lg" />
+                        <br />
+                        <br />
+
+
+
+
+
+
+
+                        <div id="example_wrapper" class="dataTables_wrapper">
+                            <div class="dataTables_length" id="example_length">
+                                <label>Show
+                                    <select name="example_length" aria-controls="example" class="">
+                                        <option value="10">10</option>
+                                        <option value="25">25</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                    </select> entries
+                                </label>
+                            </div>
+                            <div id="example_filter" class="dataTables_filter">
+                                <label>
+                                    Search:<input type="search" class="" placeholder="" aria-controls="example">
+                                </label>
+                            </div>
+                            <table id="example" class="display nowrap dataTable dtr-inline" cellspacing="0" width="100%" role="grid" aria-describedby="example_info" style="width: 100%;">
+                                <thead>
+                                    <tr role="row">
+                                        <th class="sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 136px;">Id compra</th>
+                                        <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 216px;">Nrm factura</th>
+                                        <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 102px;">Nrm bienes</th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th rowspan="1" colspan="1">Id orden de compra</th>
+                                        <th rowspan="1" colspan="1">Nrm factura</th>
+                                        <th rowspan="1" colspan="1">Nrm bienes</th>
+                                    </tr>
+                                </tfoot>
+                                <tbody>
+                                    <tr role="row" class="odd">
+                                        <td class="sorting_1">Airi Satou</td>
+                                        <td>Accountant</td>
+                                        <td>Tokyo</td>
+                                    </tr>
+                                    <tr role="row" class="even">
+                                        <td class="sorting_1">Angelica Ramos</td>
+                                        <td>Chief Executive Officer (CEO)</td>
+                                        <td>London</td>
+                                    </tr>
+                                    <tr role="row" class="odd">
+                                        <td class="sorting_1">Ashton Cox</td>
+                                        <td>Junior Technical Author</td>
+                                        <td>San Francisco</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="dataTables_info" id="example_info" role="status" aria-live="polite">Showing 1 to 10 of 57 entries</div>
+                            <div class="dataTables_paginate paging_simple_numbers" id="example_paginate">
+                                <a class="paginate_button previous disabled" aria-controls="example" data-dt-idx="0" tabindex="0" id="example_previous">Previous</a><span><a class="paginate_button current" aria-controls="example" data-dt-idx="1" tabindex="0">1</a><a class="paginate_button " aria-controls="example" data-dt-idx="2" tabindex="0">2</a><a class="paginate_button " aria-controls="example" data-dt-idx="3" tabindex="0">3</a><a class="paginate_button " aria-controls="example" data-dt-idx="4" tabindex="0">4</a><a class="paginate_button " aria-controls="example" data-dt-idx="5" tabindex="0">5</a><a class="paginate_button " aria-controls="example" data-dt-idx="6" tabindex="0">6</a></span><a class="paginate_button next" aria-controls="example" data-dt-idx="7" tabindex="0" id="example_next">Next</a>
+                            </div>
+                        </div>
+
+                        <br />
+                        <br />
+                        <br />
+
+
+
+                        <table cellpadding="0" cellspacing="0" border="0" class="display" id="example" width="100%">
+                            <thead>
+                                <tr>
+                                    <th>Proveedor</th>
+                                    <th>Id</th>
+                                    <th>Nombre</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr role="row" class="odd">
+                                    <td class="sorting_1">Ashton Cox</td>
+                                    <td>Junior Technical Author</td>
+                                    <td>San Francisco</td>
+                                    <td class=" dt-body-right">66</td>
+                                    <td>2009/01/12</td>
+                                    <td class=" dt-body-right">$86,000</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+
+                        <br />
+                        <br />
+                        <br />
+                        <div>
+                            <input id="btnAgregarFact" type="submit" name="Agregar Factura" value="Agregar Factura" />
+                            <input id="btnQuitarFact" type="submit" name="Quitar Factura" value="Quitar Factura" />
+                        </div>
+                        <br />
+                        <input id="btnGuardar" type="submit" name="Guardar" value="Guardar" />
+                        <input id="btnCancelar" type="submit" name="Cancelar" value="Cancelar" />
+                    </form>
+                </div>
+
+
             </div>
         </div>
         <hr />
@@ -95,20 +336,5 @@
             <p>&copy; 2016 - My ASP.NET Application</p>
         </footer>
     </div>
-
-    <script src="/Scripts/jquery-1.10.2.js"></script>
-
-    <script src="/Scripts/bootstrap.js"></script>
-    <script src="/Scripts/respond.js"></script>
-
-
-
-    <!-- Visual Studio Browser Link -->
-    <script type="application/json" id="__browserLink_initializationData">
-        {"appName":"Chrome","requestId":"1088c72bc7f341e7baafcabe95d970f4"}
-    </script>
-    <script type="text/javascript" src="http://localhost:55340/4538a1bd322846049ec431c56068daf1/browserLink" async="async"></script>
-    <!-- End Browser Link -->
-
 </body>
 </html>

@@ -23,11 +23,26 @@ textarea {
     max-width: 280px;
 }
 #Container h2{
-    text-align:center
+    text-align:center;
 }
 #Container{
     width:97%;
-    height:400px;
+    height:1000px;
     margin: 0 auto;
-    background-color:aqua
+    background-color:#eeeeee;
+    margin-top:3px
+}
+#Container form{
+    width:90%;
+    margin: 0 auto;
+}
+#BtnBuscarFact{
+    width: 100%;
+    margin: 13px;
+    height: 41px;
+    margin-left: 35%;
+}
+#tblResultados{
+    width:80%;
+    margin: 0 auto;
 }

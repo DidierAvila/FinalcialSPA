@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Web;
+using Negocio;
 
 namespace FinancialSPA.Controllers
 {
@@ -33,6 +34,20 @@ namespace FinancialSPA.Controllers
                 string Error = string.Empty;
                 bool Res = false; 
                 int op = int.Parse(context.Request.QueryString["op"].ToString());
+
+                //if (op != 170)
+                //{
+
+                //    string contrasenaAdmin = NegocioCI.Desencriptar(contrasenaAdminEnc, ref error);
+
+                //    negocio = new NegocioCI(servidorAdmin, usuarioBd, nombreDBConsulta, contrasenaAdmin, driverAdmin, context.Request, ref error);
+
+                //    if (Error.Length > 0)
+                //    {
+                //        throw new Exception(Error);
+                //    }
+
+                //}
 
                 if (Error.Length > 0)
                 {
@@ -67,50 +82,69 @@ namespace FinancialSPA.Controllers
                     case 200:
                         {
                             #region Cargar proveedores
+                            Proveedor Nproveedor = new Proveedor();
+                            DataTable TblRes = new DataTable();
 
-                            DataTable tblRes;// = negocio.CamposTablaArchivador(NOMBREARCHIVADOR, ref error);
-
-                            if (Error.Length > 0)
+                            if(Nproveedor.CargarListaProveedores())
                             {
-                                throw new Exception(Error);
+                                TblRes = Nproveedor._dtTabla;
+                                result = Newtonsoft.Json.JsonConvert.SerializeObject(TblRes);
+                                TblRes = null;
                             }
                             else
                             {
-                                result = Newtonsoft.Json.JsonConvert.SerializeObject(tblRes);
+                                throw new Exception(Nproveedor._sError);
                             }
 
                             #endregion Cargar proveedores
                         }
                         break;
-                    case 115:
+                    case 300:
                         {
-                            #region Autenticar Dw Final
+                            #region Cargar orden de compra por proveedores
 
-                            //string usuario = context.Request.QueryString["usuario"];
+                            OrdenCompra NordenCompra = new OrdenCompra();
+                            DataTable TblRes = new DataTable();
+                            string Idproveedor = string.Empty;
+                            Idproveedor = context.Request.QueryString["Idproveedor"];
 
-                            //string contrasena = context.Request.QueryString["contrasena"];
+                            if (string.IsNullOrEmpty(Idproveedor))
+                                throw new Exception("Idproveedor esta vacio");
 
+                            NordenCompra._iIdProveedor = int.Parse(Idproveedor);
+                            if (NordenCompra.ListarOrdenCompraXproveedor())
+                            {
+                                TblRes = NordenCompra._dtTabla;
+                                result = Newtonsoft.Json.JsonConvert.SerializeObject(TblRes);
+                                TblRes = null;
+                            }
+                            else
+                            {
+                                throw new Exception(NordenCompra._sError);
+                            }
 
-                            //bool res = negocio.AutenticarDW(usuario, contrasena, ref error);
-
-
-                            //if (error.Length > 0)
-                            //{
-                            //    throw new Exception(error);
-                            //}
-                            //else
-                            //{
-
-                            //    tipoContenido = "text/json";
-                            //    result = JsonConvert.SerializeObject(res);
-
-                            //}
-
-                            #endregion Autenticar Dw
+                            #endregion Cargar orden de compra por proveedores
                         }
                         break;
-                    case 260:
+                    case 400:
                         {
+                            #region Generar consecutivo
+
+                            Entrada Nentrada = new Entrada();
+                            string NroCosecutivo = string.Empty;
+
+                            if (Nentrada.GenerarConsecutivo())
+                            {
+                                NroCosecutivo = Nentrada._sConsecutivo;
+                                result = Newtonsoft.Json.JsonConvert.SerializeObject(NroCosecutivo);
+                            }
+                            else
+                            {
+                                throw new Exception(Nentrada._sError);
+                            }
+
+                            #endregion Generar consecutivo
+
                             #region Autenticar admin
 
                             //string lUsuarioDB = context.Request.QueryString["usuario"];
@@ -197,6 +231,60 @@ namespace FinancialSPA.Controllers
                             //}
 
                             #endregion Autenticar admin
+                        }
+                        break;
+                    case 500:
+                        {
+                            #region Cargar proveedores
+
+                            Proveedor Nproveedores = new Proveedor();
+                            DataTable TblRes = new DataTable();
+                            string Nombre = string.Empty;
+                            Nombre = context.Request.QueryString["Nombre"];
+
+                            if (string.IsNullOrEmpty(Nombre))
+                                throw new Exception("El nombre esta vacio");
+
+                            Nproveedores._sNombre = Nombre;
+                            if (Nproveedores.CargarProveedores())
+                            {
+                                TblRes = Nproveedores._dtTabla;
+                                result = Newtonsoft.Json.JsonConvert.SerializeObject(TblRes);
+                                TblRes = null;
+                            }
+                            else
+                            {
+                                throw new Exception(Nproveedores._sError);
+                            }
+
+                            #endregion Cargar proveedores
+                        }
+                        break;
+                    case 600:
+                        {
+                            #region Cargar orden compra
+
+                            OrdenCompra NordenCompra = new OrdenCompra();
+                            DataTable TblRes = new DataTable();
+                            string Id = string.Empty;
+                            Id = context.Request.QueryString["Id"];
+
+                            if (string.IsNullOrEmpty(Id))
+                                throw new Exception("El Id esta vacio");
+
+                            NordenCompra._iIdOrdenCompra = int.Parse(Id);
+                            if (NordenCompra.CargarOrdenCompraXid())
+                            {
+                                TblRes = NordenCompra._dtTabla;
+                                result = Newtonsoft.Json.JsonConvert.SerializeObject(TblRes);
+                                TblRes = null;
+                            }
+                            else
+                            {
+                                throw new Exception(NordenCompra._sError);
+                            }
+
+                            #endregion Cargar orden compra
                         }
                         break;
                 }
